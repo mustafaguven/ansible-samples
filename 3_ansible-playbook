@@ -1,0 +1,32 @@
+
+# ansible-playbook playbook.yaml (calistirmak icin)
+
+---
+# This playbook runs some simple command.
+
+- hosts: all
+  become: yes
+  #remote_user: root
+
+  tasks:
+  - name: find disk space available.
+    command: df -hPT
+
+  - name: install p7zip
+    yum:
+      name: p7zip
+      state: present
+
+  - name: ensure nginx is enabled and running
+    service:
+      name: nginx
+
+  - name: remove p7zip
+    yum:
+      name: p7zip
+      state: absent
+
+  - name: create a file and copy onto other machines
+    copy:
+      content: hello world
+      dest: /opt/testfile.txt

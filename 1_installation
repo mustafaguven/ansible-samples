@@ -1,0 +1,83 @@
+PRECONTROL
+
+rpm -qa | grep ansible  (ilgili package in kurulu olup olmadigina bakmak icin - validation purposed)
+
+rpm -ql ansible-2.8.1-1.el7.noarch | more (kurulu package in icerigini gormek icin)
+
+INSTALLATION
+
+  BIRINCI KISIM
+
+    ansible-control makinesine gec
+
+    1. yum install ansible
+
+    2. useradd -d /home/ansadm -m ansadm (ansadm userini olustur)
+
+    3. passwd ansadm (bir password ata)
+
+    4. passwd -x -1 ansadm (password expire etmemesi icin)
+
+    buraya kadar olan 4 islemi diger makinelerde de aynen tekrarla
+
+  IKINCI KISIM
+
+    ansible-control makinesine gec
+
+    1. su - ansadm (ansadm user ina gec)
+
+    2. ssh-keygen -t rsa (ssh key yarat - enterlayarak devam et)
+
+    3. cat /home/ansadm/.ssh/id_rsa.pub (ssh i kopyalayip diger makinelerin authorized_keys dosyasina koy)
+
+    **** DIGER MAKINELERDE DE TEK TEK KISIM SONUNA KADAR OLAN ASAGIDAKI ADIMLARI UYGULA
+
+        4. su - ansadm
+
+        5. mkdir .ssh
+
+        6. chmod 700 .ssh/
+
+        7. cd .ssh/
+
+        8. vi authorized_keys (3. maddede kopyalanan ssh key i buraya paste et)
+
+        9. chown ansadm:ansadm authorized_keys (owner ve grup ansadm olsun)
+
+        10. chmod 600 authorized_keys (sadece ansadm okuma ve yazma hakki ver)
+
+  UCUNCU KISIM
+
+    ansible-control makinesine gec
+
+    dns olmadigi icin /etc/hosts dosyasina manuel serverlari ekle
+
+    1. vi /etc/hosts
+
+    2. alttaki satirlari hosts dosyasina kopyala (bunun icin ya root olman ya da ansadm yi sudoers grubuna eklemen gerekiyor, root a donmek icin exit diyebilirsin)
+
+      10.6.1.101	ansible-control
+      10.100.0.97	eltrmstage
+      10.6.1.102	eltrm
+
+  DORDUNCU KISIM
+
+    ansible-control makinesine gec
+
+    1. ls -ld /etc/ansible/ (ansible directorysinin owner i root gozukuyor olmali)
+
+    (eger ansadm kullanicisindaysan exit ile root hesabina gec)
+
+    2. chown -R ansadm:ansadm /etc/ansible (owneri ansadm yap)
+
+  BESINCI KISIM
+
+    ansible-control makinesine gec
+
+    1. vi /etc/ansible/hosts (ansible controller makinesinde ansible hosts dosyasina giderek gruplari olustur)
+
+      [stage_machines]
+      eltrmstage
+
+      [production_machines]
+      eltrm

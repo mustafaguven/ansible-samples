@@ -1,0 +1,35 @@
+
+1. ansible-doc -l | more (modulleri ve aciklamalarina bakmak icin)
+
+2. ansible-doc -s yum (yum modulunun detaylari)
+
+3. ansible all -m ping (tum diger makinelere ansible ile ping atiyoruz)
+
+4. ansible eltrmstage -m ping diyerek sadece eltrmstage makinesine ping atabilirsin
+
+5. ansible all -m shell -a "uname -a; df -h" (tum makinelerde adhoc shell komutu calistirma)
+
+6. root olarak shell komutlarini calistirmak icin ansadm userinin sudoers'a eklenmesi gerekir.
+
+  etc/ansible/hosts ta tanimlanan makinelerdeki ansadm kullanicisini sudoers olarak eklemek icin o makinelere girip
+
+  visudo (enterladiktan sonra acilan ekranin en altina inip asagidakini yapistir)
+
+  ##ANSIBLE ADMIN USER
+  ansadm ALL=NOPASSWD: ALL
+
+  yum ile bir package i install etmek icin
+
+  ansible all -m yum -a "name=p7zip state=present" -b
+
+  yum ile bir package i remove etmek icin
+
+  ansible all -m yum -a "name=p7zip state=absent" -b
+
+  (b -become anlamina geliyor ve komutun root olarak calistirilmasini belirtiyor)
+
+7. dosya kopyalamak icin
+
+  touch /opt/testingfile (dosyayi yarat)
+
+  ansible all -m copy -a "src=/opt/testingfile dest=/opt/testingfile" -b (diger makinelere kopyalandi)
