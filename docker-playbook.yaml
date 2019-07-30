@@ -9,7 +9,9 @@
 
 - name: Install Docker and Docker Compose on CentOS
   hosts: all
-  become: true
+  become: yes
+  become_user: root
+  become_method: sudo
 
   tasks:
     - name: Upgrade all packages
@@ -61,3 +63,9 @@
       when:
         - docker_compose_check.msg is defined
         - docker_compose_check.msg.find('No such file or directory') != -1
+
+    - name: add ansadm to docker group
+      user:
+        name: ansadm
+        groups: docker
+        append: yes
