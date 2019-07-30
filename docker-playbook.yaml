@@ -1,5 +1,10 @@
 
 # ansible-playbook -l master docker-playbook.yaml ==> for master host only
+
+# will be refactored according to below commands
+# sudo groupadd docker
+# sudo usermod -aG docker ansadm
+
 ---
 
 - name: Install Docker and Docker Compose on CentOS
